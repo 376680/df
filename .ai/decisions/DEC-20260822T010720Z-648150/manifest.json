@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-08-22T01:07:20Z",
+  "decision": "vendor/拷贝three构建产物配importmap,npx serve即开即玩",
+  "id": "DEC-20260822T010720Z-648150",
+  "kind": "decision",
+  "rationale": "需求禁CDN且试验场零构建链;被否Vite(引入构建流程)与ESM CDN(依赖外网)",
+  "schema_version": "1.0",
+  "source_ids": [
+    "RUN-20260822T010631Z-1e978e"
+  ],
+  "status": "accepted",
+  "supersedes": null,
+  "title": "无bundler纯ESM+importmap架构",
+  "updated_at": "2026-08-22T01:07:20Z"
+}

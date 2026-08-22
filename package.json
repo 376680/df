@@ -1,0 +1,13 @@
+{
+  "name": "delta-web",
+  "version": "1.0.0",
+  "description": "Web-based 3D extraction shooter (single-player, three.js)",
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes serve -l 8931 .",
+    "start": "npx --yes serve -l 8931 ."
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  }
+}

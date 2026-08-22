@@ -1,0 +1,6 @@
+# Raw/private evidence stays local unless explicitly reviewed and exported.
+.native-sessions.lock
+native-sessions/
+sessions/*/private-notes/
+runs/*/stdout.log
+runs/*/stderr.log

@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-08-22T01:04:32Z",
+  "project_id": "PRJ-delta-web-3332c79e",
+  "project_name": "delta-web",
+  "promotion_targets": [
+    "obsidiam",
+    "skill"
+  ],
+  "raw_evidence_policy": "local-private",
+  "schema_version": "1.0"
+}

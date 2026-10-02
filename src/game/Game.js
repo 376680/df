@@ -305,6 +305,19 @@ export function createMatch(app) {
       for (const e of match.enemies) {
         e.update(dt, player, (dmg, fromPos) => {
           if (dmg) player.takeDamage(dmg, fromPos);
+          // AI 枪声：命中与 miss 都发声（带方向衰减）
+          audio.gunshot(e.pos, 'rifle');
+          // AI 开火反馈：曳光（命中指向玩家，miss 加随机偏移）
+          const tracerFrom = e.muzzlePos.clone();
+          const tracerTo = player.pos.clone();
+          tracerTo.y += 1.1;
+          if (!dmg) {
+            tracerTo.x += (Math.random() - 0.5) * 3;
+            tracerTo.y += (Math.random() - 0.5) * 3;
+            tracerTo.z += (Math.random() - 0.5) * 3;
+          }
+          const tracerDir = tracerTo.clone().sub(tracerFrom).normalize();
+          weapons.spawnTracer(tracerFrom, tracerDir, tracerFrom.distanceTo(tracerTo));
         });
       }
     }

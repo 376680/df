@@ -4,6 +4,7 @@ import { CONFIG, WEAPONS } from '../config.js';
 
 const _v1 = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
+const _v3 = new THREE.Vector3();
 let AI_UID = 1;
 
 export class Enemy {
@@ -58,6 +59,18 @@ export class Enemy {
     const gun = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.7), new THREE.MeshLambertMaterial({ color: 0x222222 }));
     gun.position.set(0.22, 1.15, 0.35);
     this.group.add(gun);
+    // 枪口闪光：小球 + 点光，开火时短暂显示
+    const flash = new THREE.Mesh(
+      new THREE.SphereGeometry(0.12, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0xffcc44, transparent: true, opacity: 0.9 })
+    );
+    const flashLight = new THREE.PointLight(0xffcc44, 3, 8);
+    this.muzzleFlash = new THREE.Group();
+    this.muzzleFlash.position.set(0.22, 1.15, 0.62);
+    this.muzzleFlash.add(flash, flashLight);
+    this.muzzleFlash.visible = false;
+    this.muzzleFlashTimer = 0;
+    this.group.add(this.muzzleFlash);
     scene.add(this.group);
 
     // 血条 sprite（受击后短暂显示）
@@ -67,6 +80,7 @@ export class Enemy {
   }
 
   get eyePos() { return _v2.set(this.pos.x, this.pos.y + 1.62, this.pos.z); }
+  get muzzlePos() { return this.muzzleFlash.getWorldPosition(_v3); }
 
   raycast(origin, dir, maxDist) {
     // 球形检测：头(1.62h r0.19) 与身体中心(0.95h r0.42)
@@ -136,6 +150,12 @@ export class Enemy {
       case 'PATROL': this._patrol(dt); break;
       case 'ALERT': this._alert(dt, player); break;
       case 'COMBAT': this._combat(dt, player, onShootAtPlayer); break;
+    }
+
+    // 枪口闪光计时（与游戏循环同步，不用 setTimeout）
+    if (this.muzzleFlashTimer > 0) {
+      this.muzzleFlashTimer -= dt;
+      if (this.muzzleFlashTimer <= 0) this.muzzleFlash.visible = false;
     }
 
     // 感知升级/降级
@@ -210,6 +230,9 @@ export class Enemy {
       if (this.burstLeft > 0) {
         this.burstLeft--;
         this.fireCooldown = 0.11;
+        // 枪口闪光
+        this.muzzleFlash.visible = true;
+        this.muzzleFlashTimer = 0.06;
         // 命中概率随距离衰减；玩家移动/蹲伏修正
         let acc = Math.max(0.05, 0.45 - distToPlayer / 25);
         if (player.sprinting) acc -= 0.08;

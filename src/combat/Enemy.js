@@ -206,12 +206,12 @@ export class Enemy {
 
     // 射击节奏：点射
     this.fireCooldown -= dt;
-    if (canFire && this.fireCooldown <= 0 && distToPlayer < this.weapon.range) {
+    if (canFire && this.fireCooldown <= 0 && distToPlayer < CONFIG.ai.fireRange) {
       if (this.burstLeft > 0) {
         this.burstLeft--;
         this.fireCooldown = 0.11;
         // 命中概率随距离衰减；玩家移动/蹲伏修正
-        let acc = 0.32 - (distToPlayer / 100);
+        let acc = Math.max(0.05, 0.45 - distToPlayer / 25);
         if (player.sprinting) acc -= 0.08;
         if (player.crouching) acc -= 0.05;
         acc = Math.max(0.05, Math.min(0.5, acc));

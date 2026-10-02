@@ -26,6 +26,7 @@ export const CONFIG = {
     viewDist: 40,
     fovDeg: 110,
     hearRadius: 60,
+    fireRange: 40,
     countMin: 14,
     countMax: 18,
     reinforceInterval: 90,

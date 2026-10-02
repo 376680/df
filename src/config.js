@@ -3,7 +3,7 @@ export const CONFIG = {
   world: {
     size: 240,              // 地图边长（米）
     gravity: 22,
-    matchTime: 12 * 60,     // 一局 12 分钟
+    matchTime: 4 * 60,     // 一局 4 分钟
     fogColor: 0x8f7a5e,
     fogDensity: 0.0065,
     skyColor: 0xc4a06a,
@@ -21,15 +21,15 @@ export const CONFIG = {
     staminaRegen: 14,       // 每秒恢复
     fallDamageThreshold: 4, // 超过 4m 开始计算跌落伤
   },
-  extraction: { holdTime: 8 },   // 撤离读秒
+  extraction: { holdTime: 5 },   // 撤离读秒
   ai: {
-    viewDist: 40,
+    viewDist: 55,
     fovDeg: 110,
-    hearRadius: 60,
+    hearRadius: 75,
     fireRange: 40,
-    countMin: 14,
-    countMax: 18,
-    reinforceInterval: 90,
+    countMin: 5,
+    countMax: 7,
+    reinforceInterval: 300,
     reinforceBatch: 2,
   },
 };

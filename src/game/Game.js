@@ -43,10 +43,10 @@ export function createMatch(app) {
   const spawn = SPAWN_POINTS[Math.floor(Math.random() * SPAWN_POINTS.length)];
   player.spawnAt(spawn.clone(), Math.random() * Math.PI * 2);
 
-  // ---- 撤离点：随机开放2个 ----
+  // ---- 撤离点：全部开放 ----
   const shuffled = [...EXTRACT_POINTS].sort(() => Math.random() - 0.5);
   match.extracts = shuffled.map((e, i) => ({
-    ...e, pos: e.pos.clone(), open: i < 2,
+    ...e, pos: e.pos.clone(), open: true,
   }));
 
   // ---- 敌人 ----

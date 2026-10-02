@@ -1,6 +1,6 @@
 // 武器系统：射击、换弹、后坐力、投掷物、曳光
 import * as THREE from 'three';
-import { WEAPONS } from '../config.js';
+import { CONFIG, WEAPONS } from '../config.js';
 
 const _v1 = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
@@ -63,7 +63,7 @@ export class WeaponSystem {
 
     // 枪声
     this.audio.gunshot(origin, def.type === 'pistol' ? 'pistol' : def.type === 'sniper' ? 'sniper' : 'rifle');
-    if (this.onShot) this.onShot(origin, def.range > 60 ? 60 : 40);   // AI 听声
+    if (this.onShot) this.onShot(origin, def.range > 60 ? CONFIG.ai.hearRadius : CONFIG.ai.hearRadius * 0.67);   // AI 听声
     return true;
   }
 

@@ -199,9 +199,14 @@ export class Enemy {
       return;
     }
 
+    // 视线检查：被遮挡时不射击，并加速退回 ALERT
+    const aiEye = _v1.set(this.pos.x, this.pos.y + 1.62, this.pos.z);
+    const canFire = this.collision.lineOfSight(aiEye, player.eyePos);
+    if (!canFire) this.alertTimer = Math.min(this.alertTimer, 1.0);
+
     // 射击节奏：点射
     this.fireCooldown -= dt;
-    if (this.fireCooldown <= 0 && distToPlayer < this.weapon.range) {
+    if (canFire && this.fireCooldown <= 0 && distToPlayer < this.weapon.range) {
       if (this.burstLeft > 0) {
         this.burstLeft--;
         this.fireCooldown = 0.11;

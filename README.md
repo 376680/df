@@ -67,3 +67,18 @@ docs/REQUIREMENTS.md     需求文档 v1.0
 - 换弹数学（5+25=30，备弹 120−25=95）、医疗消耗、手雷引信与爆炸伤害均验证通过
 
 ![match](.ai/evidence/delta-match.png)
+
+
+## 来源与致谢
+
+本项目的原始版本来自 [vimalinx/delta-web](https://github.com/vimalinx/delta-web)，我在其基础上做了二次开发。
+
+原项目未附许可证文件。本仓库中的 [LICENSE](./LICENSE) 由本人添加，仅适用于本人新增与修改的部分。
+
+本仓库相对原项目的改动：
+
+- AI 开火前增加视线（LOS）检查，修复 hearRadius 死配置
+- 收紧 AI 开火距离与命中率
+- AI 开火增加枪口闪光、曳光与枪声反馈
+- 调整为 3 分钟局节奏，三撤离点全开
+- 新增 GTA V 风格载入遮罩（法律声明版式 + 右下角转圈指示器）

@@ -88,4 +88,5 @@ class App {
 }
 
 const app = new App();
+window.DeltaLoading?.finish();   // 初始化完成且首帧已渲染，收起载入遮罩
 window.__deltaApp = app;   // 调试句柄

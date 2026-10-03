@@ -21,7 +21,12 @@
     '.dl-legal p{margin:0 0 1.15em;}',
     '.dl-legal p:last-child{margin-bottom:0;}',
     '.dl-ver{position:absolute;right:34px;bottom:22px;color:#9a9a9a;font-size:12px;',
-    'font-family:' + FONT + ';}',
+    'font-family:' + FONT + ';display:flex;align-items:center;gap:8px;}',
+    '.dl-ver-text span{display:inline-block;width:1.5em;text-align:left;}',
+    '.dl-spin{box-sizing:border-box;flex:none;width:11px;height:11px;',
+    'border:1.5px solid rgba(154,154,154,.3);border-top-color:#9a9a9a;border-radius:50%;',
+    'animation:dl-spin .9s linear infinite;}',
+    '@keyframes dl-spin{to{transform:rotate(360deg);}}',
   ].join('');
 
   var PARAS = [
@@ -52,10 +57,21 @@
 
   var ver = document.createElement('div');
   ver.className = 'dl-ver';
-  ver.appendChild(document.createTextNode(VERSION_TEXT));
+
+  // 转圈：纯 CSS animation 驱动，不走 rAF（后台标签 rAF 会停摆）
+  var spinner = document.createElement('span');
+  spinner.className = 'dl-spin';
+
+  // 版本号文字 + 省略号必须包一层，否则 flex 的 gap 会在裸文本与省略号之间多出 8px 空隙
+  var verText = document.createElement('span');
+  verText.className = 'dl-ver-text';
+  verText.appendChild(document.createTextNode(VERSION_TEXT));
   var dots = document.createElement('span');
   dots.textContent = DOTS[0];
-  ver.appendChild(dots);
+  verText.appendChild(dots);
+
+  ver.appendChild(spinner);
+  ver.appendChild(verText);
 
   overlay.appendChild(legal);
   overlay.appendChild(ver);

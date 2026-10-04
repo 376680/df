@@ -24,15 +24,16 @@ export class OverlayManager {
     const el = document.createElement('div');
     Object.assign(el.style, {
       position: 'absolute', inset: '0', zIndex: '40',
-      background: '#000a', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: "'Segoe UI','Microsoft YaHei',sans-serif", color: '#e8e4d8',
+      background: 'rgba(2,10,6,.72)', backdropFilter: 'blur(5px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: "'Segoe UI','Microsoft YaHei',sans-serif", color: '#eafff4',
     });
     el.innerHTML = this.open === 'inventory' ? this._invHtml() : this._mapHtml();
     // 点击背景关闭
     el.addEventListener('mousedown', e => { if (e.target === el) this.close(); });
     const closeBtn = document.createElement('div');
     closeBtn.textContent = '✕ [Tab]';
-    closeBtn.style.cssText = 'position:absolute;top:16px;right:24px;font-size:20px;cursor:pointer;opacity:.7;';
+    closeBtn.style.cssText = 'position:absolute;top:16px;right:24px;font-size:20px;cursor:pointer;color:#d2f0dc;letter-spacing:1px;';
     closeBtn.onclick = () => this.close();
     el.appendChild(closeBtn);
     document.getElementById('app').appendChild(el);
@@ -62,13 +63,13 @@ export class OverlayManager {
     }
     const value = inv.totalValue();
     return `
-      <div style="background:#141a12ee;border:1px solid #ffffff20;border-radius:10px;padding:28px 34px;">
-        <div style="font-size:20px;margin-bottom:4px;">背包</div>
-        <div style="font-size:13px;opacity:.7;margin-bottom:8px;">总价值 ￥${value.toLocaleString()} · 点击物品丢弃</div>
+      <div class="dw-ovl" style="background:rgba(6,20,12,.92);border:1px solid rgba(90,255,150,.28);border-radius:2px;padding:28px 34px;max-height:90vh;overflow:auto;box-shadow:0 18px 60px rgba(0,0,0,.5),0 0 40px rgba(20,140,70,.15);">
+        <div style="font-size:20px;letter-spacing:4px;margin-bottom:4px;color:#eafff4;">背包</div>
+        <div style="font-size:13px;color:#a6c9b2;margin-bottom:8px;">总价值 ￥${value.toLocaleString()} · 点击物品丢弃</div>
         <div class="dw-inv-grid" id="ov-inv" style="position:relative;width:${inv.w*52+ (inv.w-1)*4}px;height:auto;">
           ${cells.join('')}
         </div>
-        <div style="margin-top:14px;font-size:13px;line-height:1.9;opacity:.85;">
+        <div style="margin-top:14px;font-size:13px;line-height:1.9;color:#d2f0dc;">
           医疗品：${this.game.player.medkitQty ? `${this.game.player.medkitId} ×${this.game.player.medkitQty}（按 H 使用）` : '无'}
           <br>投掷物：${this.game.player.throwable.length ? this.game.player.throwable.join(', ') : '无'}（按 G 快速投掷 / 4 切换）
         </div>
@@ -91,15 +92,15 @@ export class OverlayManager {
   _mapHtml() {
     const game = this.game;
     const extracts = game.extracts.map(e => `
-      <div class="dw-kv"><span>${e.name}</span><span style="color:${e.open?'#7fd87f':'#888'}">
+      <div class="dw-kv"><span>${e.name}</span><span style="color:${e.open?'#3fe0b0':'#74a284'}">
         ${e.open ? `开放 · ${Math.round(e.pos.distanceTo(game.player.pos))}m` : '关闭'}</span></div>`).join('');
     return `
-      <div style="background:#141a12ee;border:1px solid #ffffff20;border-radius:10px;padding:28px 34px;width:min(560px,90vw);">
-        <div style="font-size:20px;margin-bottom:10px;">战术地图 · 长弓溪谷</div>
-        <canvas id="ov-map" width="500" height="500" style="width:100%;border:1px solid #ffffff20;border-radius:6px;background:#10160f;"></canvas>
-        <h2 style="font-size:15px;margin-top:14px;">撤离点</h2>
+      <div class="dw-ovl" style="background:rgba(6,20,12,.92);border:1px solid rgba(90,255,150,.28);border-radius:2px;padding:28px 34px;width:min(560px,90vw);max-height:90vh;overflow:auto;box-shadow:0 18px 60px rgba(0,0,0,.5),0 0 40px rgba(20,140,70,.15);">
+        <div style="font-size:20px;letter-spacing:4px;margin-bottom:10px;color:#eafff4;">战术地图 · 长弓溪谷</div>
+        <canvas id="ov-map" width="500" height="500" style="width:100%;border:1px solid rgba(90,255,150,.3);border-radius:2px;background:#03120a;"></canvas>
+        <h2 style="font-size:15px;letter-spacing:2px;margin-top:14px;color:#9fe8bd;">撤离点</h2>
         ${extracts}
-        <div style="margin-top:8px;font-size:12px;opacity:.55;">白点=物资容器 · 红点=敌人 · 绿框=开放撤离点</div>
+        <div style="margin-top:8px;font-size:12px;color:#74a284;">浅绿点=物资容器 · 红点=敌人 · 绿框=开放撤离点</div>
       </div>`;
   }
 
@@ -112,21 +113,27 @@ export class OverlayManager {
     const toMap = (x, z) => [W/2 + x * scale, W/2 + z * scale];
 
     // 地形底
-    ctx.fillStyle = '#182016';
+    ctx.fillStyle = '#061409';
     ctx.fillRect(0, 0, W, W);
+    // 网格
+    ctx.strokeStyle = 'rgba(90,255,150,.08)'; ctx.lineWidth = 1;
+    for (let g = 50; g < W; g += 50) {
+      ctx.beginPath(); ctx.moveTo(g, 0); ctx.lineTo(g, W); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(W, g); ctx.stroke();
+    }
     // 河
-    ctx.strokeStyle = '#2e6d8f'; ctx.lineWidth = 26 * scale;
+    ctx.strokeStyle = '#0e5233'; ctx.lineWidth = 26 * scale;
     ctx.beginPath(); ctx.moveTo(toMap(-130, -10)[0], toMap(-130, -10)[1]);
     ctx.lineTo(toMap(130, -10)[0], toMap(130, -10)[1]); ctx.stroke();
 
-    // 容器白点
-    ctx.fillStyle = '#ccc';
+    // 容器浅蓝点
+    ctx.fillStyle = '#bfffdc';
     for (const c of game.containers) {
       const [mx, my] = toMap(c.pos.x, c.pos.z);
       if (!c.searched) ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
     }
     // 敌人
-    ctx.fillStyle = '#e34f4f';
+    ctx.fillStyle = '#ff5560';
     for (const en of game.enemies) {
       if (en.dead) continue;
       const [mx, my] = toMap(en.pos.x, en.pos.z);
@@ -135,10 +142,10 @@ export class OverlayManager {
     // 撤离点
     for (const e of game.extracts) {
       const [mx, my] = toMap(e.pos.x, e.pos.z);
-      ctx.strokeStyle = e.open ? '#4fc76a' : '#666';
+      ctx.strokeStyle = e.open ? '#3fe0b0' : '#5f8a6f';
       ctx.lineWidth = 2;
       ctx.strokeRect(mx - 6, my - 6, 12, 12);
-      ctx.fillStyle = e.open ? '#4fc76a' : '#666';
+      ctx.fillStyle = e.open ? '#3fe0b0' : '#5f8a6f';
       ctx.font = '11px sans-serif';
       ctx.fillText(e.name, mx + 9, my + 4);
     }

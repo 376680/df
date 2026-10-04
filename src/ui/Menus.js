@@ -2,38 +2,70 @@
 import { WEAPONS, ARMORS, AMMO, MEDICAL, THROWABLES, RARITY, JUNK } from '../config.js';
 
 const CSS = `
-.dw-menu { position:absolute; inset:0; z-index:50; background:linear-gradient(160deg,#141a12f5,#0a0d0af2);
-  display:flex; align-items:center; justify-content:center; color:#e8e4d8;
-  font-family:'Segoe UI','Microsoft YaHei',sans-serif; }
-.dw-panel { width:min(880px,92vw); max-height:90vh; overflow:auto; padding:34px 40px;
-  background:#0006; border:1px solid #ffffff1c; border-radius:10px; }
-.dw-panel h1 { font-size:34px; letter-spacing:6px; margin-bottom:4px; color:#d8cfa8; }
-.dw-panel h2 { font-size:18px; margin:18px 0 8px; color:#b8b09a; border-bottom:1px solid #ffffff14; padding-bottom:4px;}
+.dw-menu { position:absolute; inset:0; z-index:50; color:#eafff4;
+  font-family:'Segoe UI','Microsoft YaHei',sans-serif;
+  background:
+    linear-gradient(rgba(0,255,133,.05) 1px, transparent 1px) 0 0/46px 46px,
+    linear-gradient(90deg, rgba(0,255,133,.05) 1px, transparent 1px) 0 0/46px 46px,
+    radial-gradient(1100px 640px at 68% 14%, rgba(20,140,70,.3), transparent 62%),
+    linear-gradient(160deg,#0a2818f5,#03140bf7);
+  display:flex; align-items:center; justify-content:center; }
+.dw-menu::before,.dw-menu::after { content:''; position:absolute; width:36px; height:36px; pointer-events:none; }
+.dw-menu::before { left:16px; top:16px; border-left:2px solid rgba(0,255,133,.75); border-top:2px solid rgba(0,255,133,.75); }
+.dw-menu::after { right:16px; bottom:16px; border-right:2px solid rgba(0,255,133,.75); border-bottom:2px solid rgba(0,255,133,.75); }
+.dw-panel { position:relative; width:min(880px,92vw); max-height:90vh; overflow:auto; padding:34px 40px;
+  background:rgba(6,20,12,.84); border:1px solid rgba(90,255,150,.28); border-radius:2px;
+  box-shadow:0 18px 60px rgba(0,0,0,.55), inset 0 0 70px rgba(20,140,70,.1); }
+.dw-panel h1 { font-size:34px; letter-spacing:9px; margin-bottom:4px; color:#eafff4;
+  text-shadow:0 0 22px rgba(0,255,133,.5); }
+.dw-panel h1::after { content:''; display:block; width:76px; height:2px; margin-top:12px;
+  background:linear-gradient(90deg,#00ff85,rgba(0,255,133,0)); }
+.dw-panel h2 { font-size:17px; letter-spacing:2px; margin:20px 0 8px; color:#9fe8bd;
+  border-bottom:1px solid rgba(90,255,150,.16); padding-bottom:5px; }
+.dw-panel h2::before { content:''; display:inline-block; width:3px; height:12px; margin-right:9px;
+  background:#00ff85; box-shadow:0 0 8px rgba(0,255,133,.8); vertical-align:-1px; }
 .dw-btn { display:inline-block; padding:11px 30px; margin:6px 8px 0 0; cursor:pointer;
-  background:#3a4430; border:1px solid #ffffff26; border-radius:4px; font-size:15px; color:#e8e4d8;
-  transition:background .15s; pointer-events:auto; }
-.dw-btn:hover { background:#55663c; }
+  background:linear-gradient(180deg,rgba(0,255,133,.16),rgba(0,255,133,.05));
+  border:1px solid rgba(90,255,150,.42); border-radius:1px; font-size:15px; letter-spacing:2px;
+  color:#e6fff2; text-shadow:0 0 10px rgba(0,255,133,.4);
+  transition:background .15s, box-shadow .15s, border-color .15s; pointer-events:auto; }
+.dw-btn:hover { background:linear-gradient(180deg,rgba(0,255,133,.32),rgba(0,255,133,.14));
+  border-color:#5dffb0; box-shadow:0 0 20px rgba(0,255,133,.35), inset 0 0 14px rgba(0,255,133,.16); }
 .dw-btn.small { padding:7px 16px; font-size:13.5px; }
-.dw-btn.danger { background:#4a2a24; } .dw-btn.danger:hover { background:#6a382e; }
+.dw-btn.danger { background:linear-gradient(180deg,rgba(255,90,106,.16),rgba(255,90,106,.05));
+  border-color:rgba(255,120,130,.4); }
+.dw-btn.danger:hover { background:linear-gradient(180deg,rgba(255,90,106,.32),rgba(255,90,106,.14));
+  border-color:#ff8a96; box-shadow:0 0 20px rgba(255,90,106,.3); }
 .dw-row { display:flex; gap:10px; flex-wrap:wrap; margin:6px 0; }
-.dw-card { flex:1; min-width:170px; padding:12px 14px; background:#ffffff08; border:1px solid #ffffff17;
-  border-radius:6px; cursor:pointer; transition:border-color .15s; }
-.dw-card.sel { border-color:#d8c46a; background:#d8c46a12; }
-.dw-card .t { font-weight:600; font-size:14.5px; margin-bottom:3px;}
-.dw-card .s { font-size:12.5px; opacity:.75; line-height:1.5; }
-.dw-stat { display:inline-block; margin-right:22px; font-size:14px; opacity:.85;}
-.dw-kv { display:flex; justify-content:space-between; font-size:13.5px; padding:3px 0; border-bottom:1px dashed #ffffff10;}
+.dw-card { flex:1; min-width:170px; padding:12px 14px; background:rgba(10,30,18,.45);
+  border:1px solid rgba(90,255,150,.2); border-radius:2px; cursor:pointer;
+  transition:border-color .15s, box-shadow .15s, background .15s; }
+.dw-card:hover { border-color:rgba(90,255,150,.5); box-shadow:0 0 14px rgba(0,255,133,.15); }
+.dw-card.sel { border-color:#00ff85; background:rgba(0,255,133,.14);
+  box-shadow:0 0 16px rgba(0,255,133,.28), inset 0 0 20px rgba(0,255,133,.1); }
+.dw-card .t { font-weight:600; font-size:14.5px; margin-bottom:3px; color:#e6fff2; }
+.dw-card .s { font-size:12.5px; color:#a6c9b2; line-height:1.5; }
+.dw-stat { display:inline-block; margin-right:22px; font-size:14px; color:#d2f0dc;}
+.dw-kv { display:flex; justify-content:space-between; font-size:13.5px; padding:3px 0; border-bottom:1px dashed rgba(90,255,150,.14);}
 table.dw-tbl { width:100%; border-collapse:collapse; font-size:13px; margin-top:6px;}
-table.dw-tbl th, table.dw-tbl td { padding:5px 8px; text-align:left; border-bottom:1px solid #ffffff10;}
-input[type=range]{ pointer-events:auto; width:180px;}
-textarea{ pointer-events:auto; width:100%; height:80px; background:#0008;color:#ddd;border:1px solid #fff3;border-radius:4px;padding:8px;font-family:monospace;font-size:12px;}
-select,input[type=text]{pointer-events:auto;background:#0008;color:#eee;border:1px solid #fff3;border-radius:3px;padding:4px 8px;}
+table.dw-tbl th, table.dw-tbl td { padding:5px 8px; text-align:left; border-bottom:1px solid rgba(90,255,150,.14);}
+input[type=range]{ pointer-events:auto; width:180px; accent-color:#00ff85;}
+textarea{ pointer-events:auto; width:100%; height:80px; background:rgba(4,16,10,.8); color:#d2f0dc;
+  border:1px solid rgba(90,255,150,.3); border-radius:2px; padding:8px; font-family:monospace; font-size:12px;}
+select,input[type=text]{pointer-events:auto; background:rgba(4,16,10,.8); color:#eafff4;
+  border:1px solid rgba(90,255,150,.3); border-radius:2px; padding:4px 8px;}
+select:focus,input[type=text]:focus,textarea:focus{outline:none;border-color:#5dffb0;box-shadow:0 0 12px rgba(0,255,133,.3);}
 .dw-inv-grid { display:grid; grid-template-columns:repeat(4,52px); grid-auto-rows:52px; gap:4px; margin-top:8px;}
-.dw-cell { position:relative; background:#ffffff0a; border:1px solid #ffffff14; border-radius:3px;}
+.dw-cell { position:relative; background:rgba(8,26,16,.55); border:1px solid rgba(90,255,150,.15); border-radius:1px;}
 .dw-item { position:absolute; display:flex; align-items:center; justify-content:center; font-size:10.5px;
-  text-align:center; border-radius:3px; overflow:hidden; cursor:pointer; border:1px solid; line-height:1.25; pointer-events:auto;}
-.dw-overlay-close { position:absolute;top:14px;right:20px;cursor:pointer;font-size:22px;opacity:.7;pointer-events:auto;}
-.dw-overlay-close:hover{opacity:1;}
+  text-align:center; border-radius:1px; overflow:hidden; cursor:pointer; border:1px solid; line-height:1.25; pointer-events:auto;}
+.dw-overlay-close { position:absolute;top:14px;right:20px;cursor:pointer;font-size:22px;color:#a6c9b2;pointer-events:auto;
+  transition:color .15s, text-shadow .15s;}
+.dw-overlay-close:hover{color:#5dffb0;text-shadow:0 0 12px rgba(0,255,133,.7);}
+.dw-panel::-webkit-scrollbar,.dw-ovl::-webkit-scrollbar{width:8px;}
+.dw-panel::-webkit-scrollbar-track,.dw-ovl::-webkit-scrollbar-track{background:rgba(4,16,10,.55);}
+.dw-panel::-webkit-scrollbar-thumb,.dw-ovl::-webkit-scrollbar-thumb{background:rgba(0,255,133,.28);border:1px solid rgba(90,255,150,.35);}
+.dw-panel::-webkit-scrollbar-thumb:hover,.dw-ovl::-webkit-scrollbar-thumb:hover{background:rgba(0,255,133,.5);}
 `;
 
 let styleInjected = false;
@@ -75,11 +107,11 @@ export class MainMenu extends UIScreen {
       <div class="dw-menu"><div class="dw-panel">
         <h1>DELTA-WEB</h1>
         <div style="opacity:.65;margin-bottom:20px;">烽火地带 · 单人撤离射击</div>
-        <div class="dw-stat">Koen 币 <b id="mm-koen" style="color:#ffd23a;">${save.data.koen.toLocaleString()}</b></div>
+        <div class="dw-stat">Koen 币 <b id="mm-koen" style="color:#5dffb0;">${save.data.koen.toLocaleString()}</b></div>
         <div class="dw-stat">总局数 ${st.matches}</div>
         <div class="dw-stat">撤离率 ${st.matches ? Math.round(st.extractions / st.matches * 100) : 0}%</div>
         <div class="dw-stat">K/D ${(st.kills / Math.max(1, st.deaths)).toFixed(2)}</div>
-        <div class="dw-stat">最高单局收益 <span style="color:#7fd87f">${st.bestRun.toLocaleString()}</span></div>
+        <div class="dw-stat">最高单局收益 <span style="color:#3fe0b0">${st.bestRun.toLocaleString()}</span></div>
         <h2>行动</h2>
         <div>
           <span class="dw-btn" id="btn-start">开始行动</span>
@@ -294,7 +326,7 @@ export class ResultScreen extends UIScreen {
       <span>￥${(d.value * d.qty).toLocaleString()}</span></div>`).join('');
     const el = this._mount(`
       <div class="dw-menu"><div class="dw-panel" style="max-width:560px;">
-        <h1 style="font-size:28px;color:${survived ? '#7fd87f' : '#d86a5a'};">${survived ? '撤离成功' : '任务失败'}</h1>
+        <h1 style="font-size:28px;color:${survived ? '#3fe0b0' : '#ff5a6a'};">${survived ? '撤离成功' : '任务失败'}</h1>
         <div style="margin:10px 0 16px;font-size:14px;">
           <span class="dw-stat">存活 ${m}:${String(s).padStart(2,'0')}</span>
           <span class="dw-stat">击杀 ${kills}</span>
@@ -302,8 +334,8 @@ export class ResultScreen extends UIScreen {
         </div>
         ${rows ? `<h2>带出明细</h2>${rows}` : ''}
         <h2>结算</h2>
-        <div class="dw-kv"><span>获得 Koen</span><span style="color:#ffd23a;">+${koenEarned.toLocaleString()}</span></div>
-        ${bestRun ? `<div class="dw-kv"><span>新纪录！</span><span style="color:#ffb340;">￥${bestRun.toLocaleString()}</span></div>` : ''}
+        <div class="dw-kv"><span>获得 Koen</span><span style="color:#5dffb0;">+${koenEarned.toLocaleString()}</span></div>
+        ${bestRun ? `<div class="dw-kv"><span>新纪录！</span><span style="color:#3fe0b0;">￥${bestRun.toLocaleString()}</span></div>` : ''}
         <div style="margin-top:20px;"><span class="dw-btn" id="rs-back">返回基地</span></div>
       </div></div>`);
     el.querySelector('#rs-back').onclick = onBack;

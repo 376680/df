@@ -216,20 +216,21 @@ export function createMatch(app) {
     overlay.open = 'loot';
     const el = document.createElement('div');
     Object.assign(el.style, {
-      position: 'absolute', inset: '0', zIndex: '40', background: '#000a',
+      position: 'absolute', inset: '0', zIndex: '40', background: 'rgba(2,10,6,.72)',
+      backdropFilter: 'blur(5px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: "'Segoe UI','Microsoft YaHei',sans-serif", color: '#e8e4d8',
+      fontFamily: "'Segoe UI','Microsoft YaHei',sans-serif", color: '#eafff4',
     });
     const renderItems = () => `
-      <div style="background:#141a12ee;border:1px solid #ffffff20;border-radius:10px;padding:26px 32px;width:min(440px,90vw);">
-        <div style="font-size:19px;margin-bottom:10px;">${containerTypeName(container.type)}${container.searched ? ' · 已搜刮' : ''}</div>
+      <div class="dw-ovl" style="background:rgba(6,20,12,.92);border:1px solid rgba(90,255,150,.28);border-radius:2px;padding:26px 32px;width:min(440px,90vw);max-height:90vh;overflow:auto;box-shadow:0 18px 60px rgba(0,0,0,.5),0 0 40px rgba(20,140,70,.15);">
+        <div style="font-size:19px;letter-spacing:3px;margin-bottom:10px;color:#eafff4;">${containerTypeName(container.type)}${container.searched ? ' · 已搜刮' : ''}</div>
         ${items.length ? items.map((it, i) => `
           <div class="dw-kv" style="padding:7px 0;">
             <span style="color:${RARITY[it.rarity].color};cursor:pointer;" data-take="${i}">${it.name}${it.qty>1?' ×'+it.qty:''}</span>
             <span style="opacity:.6;">￥${itemValue(it).toLocaleString()}</span>
           </div>`).join('')
-        : '<div style="opacity:.5;padding:20px 0;text-align:center;">空空如也</div>'}
-        <div style="margin-top:14px;font-size:12px;opacity:.55;">点击物品拾取 · E/Esc 关闭</div>
+        : '<div style="color:#74a284;padding:20px 0;text-align:center;">空空如也</div>'}
+        <div style="margin-top:14px;font-size:12px;color:#74a284;">点击物品拾取 · E/Esc 关闭</div>
       </div>`;
     el.innerHTML = renderItems();
     const rerender = () => { el.innerHTML = renderItems(); bind(); };

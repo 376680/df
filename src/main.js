@@ -13,6 +13,10 @@ class App {
 
     // 渲染器
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    // 色调映射 + 输出色彩空间：ACES 柔化高光、提高对比；输出统一 sRGB
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.0;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;

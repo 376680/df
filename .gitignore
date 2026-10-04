@@ -3,3 +3,4 @@ node_modules/
 .ai/runs/
 .ai/native-sessions/
 *.log
+.DS_Store

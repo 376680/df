@@ -33,7 +33,9 @@ export function createMatch(app) {
   // ---- 碰撞与世界 ----
   const collision = new CollisionWorld();
   match.collision = collision;
-  buildWorld(scene, collision);
+  const world = buildWorld(scene, collision);
+  match.sun = world.sun;                          // 太阳：阴影相机每帧跟随玩家
+  match.sunOffset = world.sun.position.clone();   // 固定的光照方向偏移
   match.containers = spawnContainers(26, scene, collision);
 
   // ---- 玩家 ----
@@ -384,6 +386,13 @@ export function createMatch(app) {
       extractProgress: match.extractProgress,
       healProgress: match.healProgress,
     });
+
+    // 阴影相机跟随玩家：太阳方向不变，整套光照刚体平移到玩家位置
+    if (match.sun) {
+      const o = match.sunOffset;
+      match.sun.position.set(player.pos.x + o.x, player.pos.y + o.y, player.pos.z + o.z);
+      match.sun.target.position.set(player.pos.x, player.pos.y, player.pos.z);
+    }
 
     renderer.render(scene, camera);
   }

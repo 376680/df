@@ -53,6 +53,7 @@ export function buildWorld(scene, collision, rng = Math.random) {
     }
     geo.computeVertexNormals();
     const ground = new THREE.Mesh(geo, mats.ground);
+    ground.receiveShadow = true;   // 地面必须接收阴影，否则看不到接触阴影
     group.add(ground);
   }
 
@@ -121,7 +122,7 @@ export function buildWorld(scene, collision, rng = Math.random) {
     const roll = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 2.2, 12), mats.hay);
     roll.rotation.z = Math.PI / 2;
     roll.position.set(hx, hayY + 1.5, hz);
-    roll.castShadow = true;
+    roll.castShadow = roll.receiveShadow = true;
     group.add(roll);
     collision.addBoxCentered(hx, hayY + 1.5, hz, 2.2, 3.0, 2.2);
   }
@@ -156,7 +157,7 @@ export function buildWorld(scene, collision, rng = Math.random) {
     const ty = collision.terrainHeight(tx, tz);
     const tank = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 5, 16), mats.rust);
     tank.position.set(tx, ty + 2.5, tz);
-    tank.castShadow = true;
+    tank.castShadow = tank.receiveShadow = true;
     group.add(tank);
     collision.addBoxCentered(tx, ty + 2.5, tz, 5.4, 5, 5.4);
   }
@@ -207,7 +208,8 @@ export function buildWorld(scene, collision, rng = Math.random) {
     const leafGeo = new THREE.SphereGeometry(1.8, 7, 5);
     const trunks = new THREE.InstancedMesh(trunkGeo, mats.trunk, N);
     const leaves = new THREE.InstancedMesh(leafGeo, mats.leaf, N);
-    leaves.castShadow = true;
+    trunks.castShadow = trunks.receiveShadow = true;
+    leaves.castShadow = leaves.receiveShadow = true;
     const dummy = new THREE.Object3D();
     let placed = 0, guard = 0;
     while (placed < N && guard++ < 800) {
@@ -262,16 +264,22 @@ export function buildWorld(scene, collision, rng = Math.random) {
   scene.background = new THREE.Color(CONFIG.world.skyColor);
   scene.fog = new THREE.FogExp2(CONFIG.world.fogColor, CONFIG.world.fogDensity);
 
-  const hemi = new THREE.HemisphereLight(0xd8c49a, 0x54503c, 0.85);
+  const hemi = new THREE.HemisphereLight(0xd8c49a, 0x54503c, 0.5);   // 环境光压低，避免把阴影冲淡
   scene.add(hemi);
-  const sun = new THREE.DirectionalLight(0xffd9a0, 1.6);
-  sun.position.set(-60, 80, 40);
+  // 低角度太阳（清晨/傍晚感：影子长、有方向感）；position 即固定的光照方向偏移
+  const sun = new THREE.DirectionalLight(0xffd9a0, 3.0);
+  sun.position.set(-84, 40, 56);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
-  sun.shadow.camera.left = -130; sun.shadow.camera.right = 130;
-  sun.shadow.camera.top = 130; sun.shadow.camera.bottom = -130;
-  sun.shadow.camera.far = 300;
+  // frustum 只覆盖玩家周围 ±40，并由 Game 每帧平移到玩家位置；覆盖全图会把分辨率摊薄成锯齿
+  sun.shadow.camera.left = -40; sun.shadow.camera.right = 40;
+  sun.shadow.camera.top = 40; sun.shadow.camera.bottom = -40;
+  sun.shadow.camera.near = 20;
+  sun.shadow.camera.far = 220;
+  sun.shadow.bias = -0.0004;       // 抑制 shadow acne（地面条纹）
+  sun.shadow.normalBias = 0.035;   // 抑制自阴影/浮空，避免影子脱离物体
   scene.add(sun);
+  scene.add(sun.target);
 
-  return { group, materials: mats };
+  return { group, materials: mats, sun };
 }

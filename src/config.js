@@ -4,9 +4,9 @@ export const CONFIG = {
     size: 240,              // 地图边长（米）
     gravity: 22,
     matchTime: 4 * 60,     // 一局 4 分钟
-    fogColor: 0x8f7a5e,
-    fogDensity: 0.0065,
-    skyColor: 0xc4a06a,
+    fogColor: 0x9db6c9,
+    fogDensity: 0.005,
+    skyColor: 0xa8c4d8,
   },
   player: {
     height: 1.7,

@@ -88,6 +88,7 @@ export function createMatch(app) {
   }
 
   // ---- 武器系统接线 ----
+  scene.add(camera);   // 相机挂入场景图：viewmodel 是 camera 子物体，否则不被渲染
   const weapons = new WeaponSystem({ scene, collision, audio, camera });
   match.weapons = weapons;
   weapons.enemies = match.enemies;
@@ -305,6 +306,8 @@ export function createMatch(app) {
     if (!uiBlocked) {
       weapons.applyRecoilToCamera(player, dt);
       player.update(dt);
+      // viewmodel 切枪：传当前 defId；刀/投掷槽（knife/null）自动隐藏
+      weapons.viewModel.update(activeWeaponState()?.defId ?? null);
       for (const e of match.enemies) {
         e.update(dt, player, (dmg, fromPos) => {
           if (dmg) player.takeDamage(dmg, fromPos);
@@ -493,6 +496,7 @@ export function createMatch(app) {
     unbinds.forEach(u => u());
     hud.setVisible(false);
     overlay.close();
+    weapons.viewModel.dispose();
     for (const e of match.enemies) e.dispose();
     scene.clear();
   };

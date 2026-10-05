@@ -1,6 +1,7 @@
 // 武器系统：射击、换弹、后坐力、投掷物、曳光
 import * as THREE from 'three';
 import { CONFIG, WEAPONS } from '../config.js';
+import { ViewModel } from './ViewModel.js';
 
 const _v1 = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
@@ -18,6 +19,8 @@ export class WeaponSystem {
 
     this.recoilPitch = 0; this.recoilYaw = 0;
     this._shotIndex = 0;
+
+    this.viewModel = new ViewModel(camera);
   }
 
   weaponDef(state) { return state ? WEAPONS[state.defId] : null; }
@@ -53,7 +56,9 @@ export class WeaponSystem {
       }
       const res = this.hitscan(player, origin, dir, def);
       if (res.hitEnemy) { anyHit = true; if (res.head) headHit = true; }
-      this.spawnTracer(origin, dir, res.dist ?? def.range, res.endPoint);
+      // 曳光视觉起点取枪管末端（右下角枪口），无枪模时回退眼睛；endOverride 命中点不动
+      const tracerOrigin = this.viewModel.getMuzzleWorldPosition() || origin;
+      this.spawnTracer(tracerOrigin, dir, res.dist ?? def.range, res.endPoint);
     }
 
     // 后坐力
@@ -63,6 +68,7 @@ export class WeaponSystem {
 
     // 枪声
     this.audio.gunshot(origin, def.type === 'pistol' ? 'pistol' : def.type === 'sniper' ? 'sniper' : 'rifle');
+    this.viewModel.triggerFlash();   // 玩家枪口闪光（近战在上方提前 return，不会走到这里）
     if (this.onShot) this.onShot(origin, def.range > 60 ? CONFIG.ai.hearRadius : CONFIG.ai.hearRadius * 0.67);   // AI 听声
     return true;
   }
@@ -160,6 +166,8 @@ export class WeaponSystem {
   }
 
   updateProjectiles(dt, damagePlayerFn, aiList) {
+    // 枪口闪光衰减：此函数每帧都被 Game 调用（在 !uiBlocked 块之外），开背包/地图时也继续衰减
+    this.viewModel.updateFlash(dt);
     // 曳光衰减
     for (let i = this.tracers.length - 1; i >= 0; i--) {
       const t = this.tracers[i];

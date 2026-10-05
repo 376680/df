@@ -1,6 +1,6 @@
 # DELTA-WEB
 
-网页端 3D 第一人称撤离射击游戏（致敬《三角洲行动》烽火地带玩法，原创实现）。
+网页端 3D 第一人称撤离射击游戏（致敬《三角洲行动》烽火地带玩法，非原创实现，基于vimalinx/delta-web）。
 
 ![menu](.ai/evidence/delta-menu.png)
 
@@ -44,19 +44,21 @@ npx serve -l 8931 .
 ## 结构
 
 ```
+index.html
+loading.js            GTA V 风格载入遮罩
+fps.js                左上角 FPS 计数器
 src/
-├── main.js              入口（App 状态机）
-├── config.js            全局配置 + 物品/武器数据库
-├── engine/              输入管理、存档管理
-├── audio/               WebAudio 程序化合成引擎
-├── world/               地图构建、碰撞系统(AABB+地形)
-├── player/              FPS 控制器
-├── combat/              武器系统、AI 敌人
-├── loot/                物资生成、背包
-├── ui/                  HUD、菜单、覆盖层
-└── game/                一局总控（Game.js）
-docs/REQUIREMENTS.md     需求文档 v1.0
-.ai/                     开发证据链（ai-ledger）
+  main.js             App 入口：渲染器 / 相机 / 场景 / 主菜单循环
+  config.js           全部可调参数（世界 / 玩家 / AI / 武器 / 物资）
+  engine/             Input · SaveManager
+  game/               Game.js（对局主控）
+  world/              WorldBuilder（地图生成）· CollisionWorld
+  player/             Player（移动 / 物理 / 相机）
+  combat/             WeaponSystem · Enemy
+  loot/               LootSystem · Inventory
+  ui/                 HUD · Menus · Overlay
+  audio/              AudioEngine
+vendor/               three.js r180
 ```
 
 ## 验证记录
@@ -82,3 +84,7 @@ docs/REQUIREMENTS.md     需求文档 v1.0
 - AI 开火增加枪口闪光、曳光与枪声反馈
 - 调整为 3 分钟局节奏，三撤离点全开
 - 新增 GTA V 风格载入遮罩（法律声明版式 + 右下角转圈指示器）
+- 新增 FPS 计数器
+- 启用 ACES 色调映射与 sRGB 输出色彩空间
+- 方向光阴影与白天基调
+- 第一人称武器模型（参数化拼装，5 把枪）

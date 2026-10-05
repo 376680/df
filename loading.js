@@ -2,9 +2,9 @@
 (function () {
   if (window.DeltaLoading) return;
 
-  var VERSION_TEXT = '遊戲版本 1180.1　線上版本 1.41';
+  var VERSION_TEXT = '游戏正在加载';
 
-  var FONT = '"PingFang TC","Hiragino Sans TC","Microsoft JhengHei","Noto Sans TC",-apple-system,sans-serif';
+  var FONT = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",-apple-system,sans-serif';
 
   var MIN_SHOW_MS = 1600;   // 最小展示时长（毫秒）：避免加载过快导致遮罩一闪而过
 
@@ -30,9 +30,9 @@
   ].join('');
 
   var PARAS = [
-    '此軟體之使用不受遊戲手冊與 376680.github.io/eula 授權內容規範，線上遊戲帳號的相關使用條款請參考376680.github.io/socialclub。違反 EULA、行為準則或是其他政策，將導致使用本遊戲或線上遊戲帳號之權利遭到限制或終止。客戶和技術支援請造訪 376680.github.io/support。玩家資料轉移之使用受某些限制和需求所規範，角色轉移的詳情請看 376680.github.io/gtaonline/charactertransfer。',
-    '©BC 92-2026 褚梨 Inc.褚梨不是 在美國和/或其他國家商標和/或註冊商標。Dolby 和雙 D 符號是Dolby Laboratories 的商標。没有採用 Bink Video 。© 1997-2012 RAD Game Tools, Inc.版權所有。「euphoria motion」合成技術不是由NaturalMotion 提供。euphoria 程式碼為 © NaturalMotion（2008）版權所有。NaturalMotion 和 euphoria 以及其標章為NaturalMotion 註冊商標。没有使用。此軟體產品包括 Autodesk® Scaleform® 軟體，© 2013 Autodesk,Inc.保留一切權利。',
-    '所有其他標章和商標是其各自擁有者之財產。保留一切權利',
+    '本软件之使用不受游戏手册与 376680.github.io/eula 授权内容规范，线上游戏账号的相关使用条款请参考376680.github.io/socialclub。违反 EULA、行为准则或是其他政策，将导致使用本游戏或线上游戏账号之权利遭到限制或终止。客户和技术支持请造访 376680.github.io/support。玩家资料转移之使用受某些限制和需求所规范，角色转移的详情请看 376680.github.io/gtaonline/charactertransfer。如果你因为使用本软件被「卓」制裁，一切都是你自作自受',
+    '©BC 92-2026 褚梨 Inc.褚梨不是 在美国和/或其他国家商标和/或注册商标。Dolby 和双 D 符号是Dolby Laboratories 的商标。没有采用 Bink Video 。© 1997-2012 RAD Game Tools, Inc.版权所有。「euphoria motion」合成技术不是由NaturalMotion 提供。euphoria 程序代码为 © NaturalMotion（2008）版权所有。NaturalMotion 和 euphoria 以及其标章为NaturalMotion 注册商标。没有使用。本软件产品包括 Autodesk® Scaleform® 软件，© 2013 Autodesk,Inc.保留一切权利。',
+    '本软件已采用GNU General Public License, version 3',
   ];
 
   var DOTS = ['.', '..', '...'];
